@@ -1,0 +1,18 @@
+# Dockerfile.worker
+FROM python:3.9-slim
+
+WORKDIR /app
+
+ENV PYTHONUNBUFFERED 1
+
+RUN pip install poetry
+
+COPY . /app
+
+RUN poetry install --no-dev
+
+# Set environment variables for Celery
+ENV CELERY_BROKER_URL="amqp://user:password@rabbitmq:5672//"
+ENV CELERY_RESULT_BACKEND="mongodb://admin:password@mongodb:27017/celery_results?authSource=admin"
+
+CMD ["celery", "-A", "src.potpie.worker.celery_app", "worker", "-l", "info"]
