@@ -24,3 +24,5 @@ TestResults.xml
 .env
 # pycache
 __pycache__
+# virtual environment
+.venv/
