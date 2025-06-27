@@ -4,12 +4,6 @@ version = "0.1.0"
 description = ""
 authors = [{ name = "Aman Gupta", email = "aman16sep2k@gmail.com" }]
 readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "fastapi[standard] (>=0.115.13,<0.116.0)",
-    "celery[mongodb,rabbitmq] (>=5.5.3,<6.0.0)",
-    "gunicorn (>=23.0.0,<24.0.0)",
-]
 
 [tool.poetry]
 name = "potpie"
@@ -19,6 +13,25 @@ authors = []
 license = "Proprietary"
 readme = "README.md"
 
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+fastapi = { extras = ["standard"], version = ">=0.115.13,<0.116.0" }
+celery = { extras = ["mongodb", "rabbitmq"], version = ">=5.5.3,<6.0.0" }
+requests = "^2.32.4"
+pygithub = "^2.6.1"
+langchain = "0.3.26"
+langchain-experimental = "0.3.4"
+langchain-google-genai = "2.1.5"
+structlog = "^25.4.0"
+psycopg2-binary = "^2.9.9"
+sqlalchemy = "^2.0.23"
+alembic = "^1.13.1"
+python-dotenv = "^1.0.0"
+httpx = "^0.25.2"
+uvicorn = "^0.24.0"
+redis = "^5.0.1"
+pydantic = "^2.5.0"
+chardet = "^5.2.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
