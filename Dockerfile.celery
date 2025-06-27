@@ -1,18 +1,25 @@
-# Dockerfile.worker
-FROM python:3.9-slim
+FROM python:3.12.3-slim-bookworm
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
+    curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-ENV PYTHONUNBUFFERED 1
+ENV POETRY_VERSION=1.8.2
+RUN curl -sSL https://install.python-poetry.org | python3 - && \
+    ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
-RUN pip install poetry
+ENV POETRY_VIRTUALENVS_CREATE=false \
+    PYTHONUNBUFFERED=1
 
-COPY . /app
+COPY pyproject.toml poetry.lock ./
 
-RUN poetry install --no-dev
+RUN poetry install --no-root
 
-# Set environment variables for Celery
-ENV CELERY_BROKER_URL="amqp://user:password@rabbitmq:5672//"
-ENV CELERY_RESULT_BACKEND="mongodb://admin:password@mongodb:27017/celery_results?authSource=admin"
+COPY . .
 
-CMD ["celery", "-A", "src.potpie.worker.celery_app", "worker", "-l", "info"]
+CMD ["sh", "-c", "cd src && celery -A potpie.celery_app worker -l info"]
